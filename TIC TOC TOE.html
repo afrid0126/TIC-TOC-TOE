@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tic Tac Toe</title>
+  <style>
+    body{
+      background-color:black;
+      color:white;
+    }
+    .container {
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    
+      color:white;
+    }
+    h1,h3{
+      display:flex;
+      justify-content:center;
+    }
+    .buttons button {
+      width: 100px;
+      height: 100px;
+      background-color: rgb(221, 219, 219);
+      font-size: 70px;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+    }
+    .newmatch{
+      cursor:pointer;
+      height:50px;
+      width:100px;
+      background-color:red;
+      color:white;
+      display:none;
+    }
+    .newmatchcontainer{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tic Toc Toe</h1>
+  <h3 id="turn"></h3>
+  <h3 id="winning"></h3>
+  <div class="container">
+  <div class="buttons">
+    <button id="b1"></button>
+    <button id="b2"></button>
+    <button id="b3"></button>
+    <button id="b4"></button>
+    <button id="b5"></button>
+    <button id="b6"></button>
+    <button id="b7"></button>
+    <button id="b8"></button>
+    <button id="b9"></button>
+  </div></div><br><br>
+  <div class="newmatchcontainer">
+    <button id="newmatch" class="newmatch">RESET</button>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  let val1 = 0;
+  const buttons = document.querySelectorAll(".buttons button");
+  const turn = document.getElementById('turn');
+  const winning = document.getElementById('winning');
+  const newmatch = document.getElementById("newmatch");
+  let gameActive = true;
+
+  const winPatterns = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // cols
+    [0, 4, 8], [2, 4, 6]             // diagonals
+  ];
+
+  function checkWinner() {
+    for (let pattern of winPatterns) {
+      let [a, b, c] = pattern;
+      if (
+        buttons[a].textContent &&
+        buttons[a].textContent === buttons[b].textContent &&
+        buttons[a].textContent === buttons[c].textContent
+      ) {
+        return buttons[a].textContent;
+      }
+    }
+    return null;
+  }
+
+  function updateTurnText() {
+    turn.textContent = val1 % 2 === 0 ? "Player 1 Turn (X)" : "Player 2 Turn (O)";
+  }
+
+  function resetGame() {
+    buttons.forEach(button => button.textContent = "");
+    val1 = 0;
+    gameActive = true;
+    winning.textContent = "";
+    updateTurnText();
+    newmatch.style.display='none';
+  }
+
+  // Initialize turn text
+  updateTurnText();
+
+  // Button click handler
+  buttons.forEach(button => {
+    button.addEventListener("click", function () {
+      if (!gameActive) return;
+
+      if (button.textContent === "") {
+        button.textContent = val1 % 2 === 0 ? "X" : "O";
+        val1++;
+
+        const winner = checkWinner();
+        if (winner) {
+          winning.textContent = `${winner} won the match! 🎉`;
+          gameActive = false;
+          turn.textContent = "";
+          newmatch.style.display='inline-block';
+          newmatch.addEventListener("click", resetGame);
+          return;
+        }
+
+        if (val1 === 9) {
+          winning.textContent = "Oh, It's a Draw! Please try again.";
+          gameActive = false;
+          turn.textContent = "";
+          return;
+        }
+
+        updateTurnText();
+      }
+    });
+  });
+
+  // New Match button handler
+  
+});
+
+    </script>
+</body>
+</html>
